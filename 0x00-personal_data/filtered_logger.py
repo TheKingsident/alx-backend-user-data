@@ -7,6 +7,7 @@ import mysql.connector
 import os
 import re
 from typing import List
+from mysql.connector import Error
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
@@ -77,3 +78,30 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
                                    password=password,
                                    host=host,
                                    database=db_name)
+
+
+def main():
+    logger = get_logger()
+    try:
+        db_connection = get_db()
+        cursor = db_connection.cursor()
+        cursor.execute("SELECT * FROM users")
+        rows = cursor.fetchall()
+        for row in rows:
+            msg = "name={}; email={}; phone={}; ssn={}; password={};\
+            ip={}; last_login={}; user_agent={}; ".format(
+                row[0], row[1], row[2], row[3], row[4], row[5], row[6],
+                row[7]
+                )
+            filtered_msg = filter_datum(list(PII_FIELDS), '***', msg, '; ')
+            logger.info(filtered_msg)
+    except Error as e:
+        logger.error("Error connecting to the database: %s", e)
+    finally:
+        if 'db_connection' in locals() and db_connection.is_connected():
+            cursor.close()
+            db_connection.close()
+
+
+if __name__ == "__main__":
+    main()
