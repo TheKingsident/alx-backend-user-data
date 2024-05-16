@@ -61,7 +61,7 @@ def get_logger() -> logging.Logger:
     return user_data_logger
 
 
-def get_db():
+def get_db() -> mysql.connector.connection.MySQLConnection:
     """ returns a connector to the database
     """
     username = os.getenv("PERSONAL_DATA_DB_USERNAME", "root")
@@ -73,4 +73,7 @@ def get_db():
         raise ValueError(
             "PERSONAL_DATA_DB_NAME environment variable is not set")
 
-    return mysql.connector.connect(username, password, host, db_name)
+    return mysql.connector.connect(user=username,
+                                   password=password,
+                                   host=host,
+                                   database=db_name)
