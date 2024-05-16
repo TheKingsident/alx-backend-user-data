@@ -81,6 +81,8 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 
 
 def main():
+    """ Main function
+    """
     logger = get_logger()
     try:
         db_connection = get_db()
