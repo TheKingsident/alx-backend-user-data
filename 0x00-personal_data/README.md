@@ -1,0 +1,1 @@
+This directory contains assignment files for the "0x00. Personal data" tasks from ALX.
