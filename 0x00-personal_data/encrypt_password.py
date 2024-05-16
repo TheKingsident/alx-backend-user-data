@@ -5,7 +5,7 @@
 import bcrypt
 
 
-def hash_password(password: str):
+def hash_password(password: str) -> bytes:
     """ returns a salted, hashed password, which is a byte string
     """
     salt = bcrypt.gensalt()
