@@ -2,9 +2,12 @@
 """ 0. Regex-ing
 """
 
+import csv
 import re
 import logging
 from typing import List
+
+PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 class RedactingFormatter(logging.Formatter):
@@ -41,3 +44,13 @@ def filter_datum(fields: List[str], redaction: str,
                 value[i] = re.sub(value[i], '', value[i])
                 value[i] = subst
     return separator.join(value)
+
+def get_logger() -> logging.Logger:
+    user_data_logger = logging.getLogger("user_data")
+    user_data_logger.setLevel(logging.INFO)
+    formatter = RedactingFormatter(PII_FIELDS)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    user_data_logger.addHandler(stream_handler)
+
+    return user_data_logger
