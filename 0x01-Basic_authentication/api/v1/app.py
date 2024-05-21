@@ -37,29 +37,42 @@ def forbidden(error):
     return jsonify({"error": "Forbidden"}), 403
 
 
+def get_auth_instance():
+    """ get_auth_instance support method
+    """
+    auth_type = getenv("AUTH_TYPE")
+    if auth_type:
+        auth_module = __import__(f"api.v1.auth.{auth_type}", fromlist=["auth"])
+        return auth_module.Auth()
+    else:
+        return None
+
+
+auth = get_auth_instance()
+
+
+@app.before_request
 def before_request():
-    """ Before request handler """
+    """ before_request method
+    """
     if auth is None:
         return
 
-    excluded_paths = ['/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
-    
-    if not auth.require_auth(request.path, excluded_paths):
+    if request.path in ["/api/v1/status/",
+                        "/api/v1/unauthorized/",
+                        "/api/v1/forbidden/"]:
         return
 
-    if auth.authorization_header(request) is None:
+    auth_header = auth.authorization_header(request)
+    if auth_header is None:
         abort(401)
 
-    if auth.current_user(request) is None:
+    if not auth.current_user(request):
         abort(403)
-
-app.before_request(before_request)
 
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
     port = getenv("API_PORT", "5000")
     auth_type = getenv("AUTH_TYPE")
-    if auth_type == "Auth":
-        auth = Auth()
     app.run(host=host, port=port, debug=True)
