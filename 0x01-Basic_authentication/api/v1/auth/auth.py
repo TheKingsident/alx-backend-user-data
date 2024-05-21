@@ -37,9 +37,3 @@ class Auth:
         """ current_user method
         """
         return None
-
-
-class BasicAuth(Auth):
-    """ Basic Authorization class
-    """
-    pass

@@ -6,8 +6,6 @@ from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
-from api.v1.auth.auth import Auth, BasicAuth
-import os
 
 
 app = Flask(__name__)
@@ -43,11 +41,12 @@ def get_auth_instance():
     auth_type = getenv("AUTH_TYPE")
     if auth_type:
         if auth_type == 'auth':
-            auth_module = __import__("api.v1.auth.auth", fromlist=["auth"])
+            auth_module = __import__(f"api.v1.auth.{auth_type}",
+                                     fromlist=["auth"])
             return auth_module.Auth()
         elif auth_type == "basic_auth":
-            basic_auth_module = __import__("api.v1.auth.auth",
-                                           fromlist=["auth"])
+            basic_auth_module = __import__(f"api.v1.auth.{auth_type}",
+                                           fromlist=["basic_auth"])
             return basic_auth_module.BasicAuth()
     return None
 
