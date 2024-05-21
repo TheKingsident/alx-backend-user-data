@@ -4,6 +4,7 @@
 
 from flask import request
 from typing import List, TypeVar
+import fnmatch
 
 
 class Auth:
@@ -19,8 +20,10 @@ class Auth:
 
         path = path.rstrip('/') + '/'
 
-        if path in excluded_paths:
-            return False
+        for excluded_path in excluded_paths:
+            excluded_path = excluded_path.rstrip('/') + '/'
+            if fnmatch.fnmatch(path, excluded_path):
+                return False
 
         return True
 
