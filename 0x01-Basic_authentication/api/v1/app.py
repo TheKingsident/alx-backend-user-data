@@ -6,7 +6,7 @@ from os import getenv
 from api.v1.views import app_views
 from flask import Flask, jsonify, abort, request
 from flask_cors import (CORS, cross_origin)
-from api.v1.auth.auth import Auth
+from api.v1.auth.auth import Auth, BasicAuth
 import os
 
 
@@ -42,10 +42,14 @@ def get_auth_instance():
     """
     auth_type = getenv("AUTH_TYPE")
     if auth_type:
-        auth_module = __import__(f"api.v1.auth.{auth_type}", fromlist=["auth"])
-        return auth_module.Auth()
-    else:
-        return None
+        if auth_type == 'auth':
+            auth_module = __import__("api.v1.auth.auth", fromlist=["auth"])
+            return auth_module.Auth()
+        elif auth_type == "basic_auth":
+            basic_auth_module = __import__("api.v1.auth.auth",
+                                           fromlist=["auth"])
+            return basic_auth_module.BasicAuth()
+    return None
 
 
 auth = get_auth_instance()
@@ -63,9 +67,8 @@ def before_request():
                       "/api/v1/forbidden/"
                       ]
 
-    if request.path not in excluded_paths:
-        if not auth.require_auth(request.path, excluded_paths):
-            return
+    if not auth.require_auth(request.path, excluded_paths):
+        return
 
     auth_header = auth.authorization_header(request)
     if auth_header is None:
