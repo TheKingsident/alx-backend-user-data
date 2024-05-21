@@ -18,7 +18,7 @@ class Auth:
         """ authorization_header method
         """
         return None
-    
+
     def current_user(self, request=None) -> TypeVar('User'):
         """ current_user method
         """
