@@ -29,7 +29,13 @@ class SessionAuth(Auth):
         return session_id
 
     def user_id_for_session_id(self, session_id: str = None) -> str:
-        """ returns a User ID based on a Session ID
+        """Returns a user ID based on a session ID
+
+        Args:
+            session_id (str): The session ID
+
+        Returns:
+            str: The user ID associated with the session ID, or None if invalid
         """
         if session_id is None or not isinstance(session_id, str):
             return None
