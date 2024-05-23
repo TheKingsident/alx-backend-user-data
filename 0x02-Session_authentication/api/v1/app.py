@@ -52,6 +52,10 @@ def get_auth_instance():
             session_auth_module = __import__(f"api.v1.auth.{auth_type}",
                                              fromlist=[f"{auth_type}"])
             return session_auth_module.SessionAuth()
+        elif auth_type == 'session_exp_auth':
+            session_auth_module = __import__(f"api.v1.auth.{auth_type}",
+                                             fromlist=[f"{auth_type}"])
+            return session_auth_module.SessionExpAuth()
     return None
 
 
