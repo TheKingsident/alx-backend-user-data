@@ -42,12 +42,16 @@ def get_auth_instance():
     if auth_type:
         if auth_type == 'auth':
             auth_module = __import__(f"api.v1.auth.{auth_type}",
-                                     fromlist=["auth"])
+                                     fromlist=[f"{auth_type}"])
             return auth_module.Auth()
         elif auth_type == "basic_auth":
             basic_auth_module = __import__(f"api.v1.auth.{auth_type}",
-                                           fromlist=["basic_auth"])
+                                           fromlist=[f"{auth_type}"])
             return basic_auth_module.BasicAuth()
+        elif auth_type == 'session_auth':
+            session_auth_module = __import__(f"api.v1.auth.{auth_type}",
+                                             fromlist=[f"{auth_type}"])
+            return session_auth_module.SessionAuth()
     return None
 
 
@@ -77,6 +81,8 @@ def before_request():
         abort(403)
 
     request.current_user = auth.current_user(request)
+
+    print(f"Using authentication class: {auth.__class__.__name__}")
 
 
 if __name__ == "__main__":
