@@ -1,0 +1,1 @@
+This directory contains assignment files for the "0x03. User authentication service" tasks from ALX.
