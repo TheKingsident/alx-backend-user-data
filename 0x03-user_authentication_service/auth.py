@@ -63,10 +63,10 @@ class Auth:
         """
         if session_id is None:
             return None
-        user = self._db.find_user_by(session_id=session_id)
-        if user is None:
+        try:
+            return self._db.find_user_by(session_id=session_id)
+        except NoResultFound:
             return None
-        return user
 
 
 def _hash_password(password: str) -> bytes:
