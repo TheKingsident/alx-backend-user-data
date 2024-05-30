@@ -86,7 +86,7 @@ class Auth:
             return reset_token
         except NoResultFound:
             raise ValueError
-        
+
     def update_password(self, reset_token: str, password: str) -> None:
         """Updates the user password
         """
