@@ -96,7 +96,7 @@ class Auth:
             self._db.update_user(user.id, hashed_password=hashed_password,
                                  reset_token=None)
         except NoResultFound:
-            raise ValueError("Invalid reset token")
+            raise ValueError()
 
 
 def _hash_password(password: str) -> bytes:
