@@ -86,7 +86,6 @@ class Auth:
             return reset_token
         except NoResultFound:
             raise ValueError
-        
 
 
 def _hash_password(password: str) -> bytes:
